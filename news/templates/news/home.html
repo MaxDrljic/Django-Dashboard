@@ -14,7 +14,9 @@
   <!--- Display my next scrape if the hide_me is True -->
   <div class="jumbotron">
     <h1>Welcome to your dashboard</h1>
-    <p>{% if hide_me == True %} Your next scrape is in {{ next_scrape }} hours.</p>
+    {% if hide_me == True %}
+    <p>Your next scrape is in {{ next_scrape }} hours.</p>
+    {% else %}
     <form action="{% url 'scrape' %}" method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary">Grab my news</button>
