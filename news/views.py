@@ -59,8 +59,8 @@ def scrape(request):
 
         # stackoverflow solution for images
 
-        media_root = 'Users/Max/Desktop/djangodashboard/media_root'
-        if not image_source.startwith(("data:image", "javascript")):
+        media_root = 'C:/Users/Max/Desktop/djangodashboard/media_root'
+        if not image_source.startswith(("data:image", "javascript")):
             local_filename = image_source.split('/')[-1].split("?")[0]
             r = session.get(image_source, stream=True, verify=False)
             with open(local_filename, 'wb') as f:
@@ -78,4 +78,4 @@ def scrape(request):
         new_headline.image = local_filename
         new_headline.save()
 
-    return redirect('/')
+    return redirect('/home/')

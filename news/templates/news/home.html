@@ -11,15 +11,32 @@
 </head>
 
 <body>
+  <!--- Display my next scrape if the hide_me is True -->
   <div class="jumbotron">
     <h1>Welcome to your dashboard</h1>
-    <p>{% if hide_me == False %} Your next scrape is in {{ next_scrape }} hours.</p>
+    <p>{% if hide_me == True %} Your next scrape is in {{ next_scrape }} hours.</p>
     <form action="{% url 'scrape' %}" method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary">Grab my news</button>
     </form>
     {% endif %}
   </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 text-center">
+        {% for object in object_list %}
+        <div class="card text-center" style="width: 100%;">
+          <div class="card-body">
+            <img src="{{ object.image.url }}" class="card-img-top">
+            <h5 class="card-title"><a href="{{ object.url }}">{{ object.title }}</a></h5>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>
