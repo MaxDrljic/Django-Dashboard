@@ -19,12 +19,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf.urls import include, url
 
-from news.views import scrape
+from news.views import scrape, news_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('notes/', include('notepad.urls', namespace='notes')),
-    path('scrape/', scrape)
+    path('scrape/', scrape, name='scrape'),
+    path('home/', news_list, name='home')
 ]
 
 if settings.DEBUG:

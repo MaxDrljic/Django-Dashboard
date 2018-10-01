@@ -13,6 +13,14 @@ import shutil
 from .models import Headline, UserProfile
 
 
+def news_list(request):
+    headlines = Headline.objects.all()
+    context = {
+        'object_list': headlines
+    }
+    return render(request, "news/home.html", context)
+
+
 def scrape(request):
     user_p = UserProfile.objects.filter(user=request.user).first()
     user_p.last_scrape = datetime.now(timezone.utc)
