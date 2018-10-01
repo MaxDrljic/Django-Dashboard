@@ -13,10 +13,12 @@
 <body>
   <div class="jumbotron">
     <h1>Welcome to your dashboard</h1>
+    <p>{% if hide_me == False %} Your next scrape is in {{ next_scrape }} hours.</p>
     <form action="{% url 'scrape' %}" method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-primary">Grab my news</button>
     </form>
+    {% endif %}
   </div>
 </body>
 
