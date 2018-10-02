@@ -27,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('notes/', include('notepad.urls', namespace='notes')),
     path('scrape/', scrape, name='scrape'),
-    path('home/', news_list, name='home')
+    path('home/', news_list, name='home'),
     path('companies/', company_article_list, name='companies')
 ]
 
