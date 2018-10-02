@@ -19,6 +19,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf.urls import include, url
 
+from finance.views import company_article_list
+
 from news.views import scrape, news_list
 
 urlpatterns = [
@@ -26,6 +28,7 @@ urlpatterns = [
     path('notes/', include('notepad.urls', namespace='notes')),
     path('scrape/', scrape, name='scrape'),
     path('home/', news_list, name='home')
+    path('companies/', company_article_list, name='companies')
 ]
 
 if settings.DEBUG:
