@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf.urls import include, url
 
-from finance.views import company_article_list
+from finance.views import company_article_list, ChartData
 
 from news.views import scrape, news_list
 
@@ -28,7 +28,8 @@ urlpatterns = [
     path('notes/', include('notepad.urls', namespace='notes')),
     path('scrape/', scrape, name='scrape'),
     path('home/', news_list, name='home'),
-    path('companies/', company_article_list, name='companies')
+    path('companies/', company_article_list, name='companies'),
+    path('api/chart/data', ChartData.as_view(), name='api-chart-data')
 ]
 
 if settings.DEBUG:

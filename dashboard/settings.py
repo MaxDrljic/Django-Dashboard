@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Defining djangorestframework
+    'rest_framework',
+
     'finance',
     'notepad',
     'news'
