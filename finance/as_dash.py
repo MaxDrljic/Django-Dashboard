@@ -71,7 +71,6 @@ def _create_app():
     @app.callback(
         dash.dependencies.Output('graphs', 'children'),
         [dash.dependencies.Input('stock-ticker-input', 'value')])
-    # End dash application ----------------->
     def update_graph(tickers):
         graphs = []
         for i, ticker in enumerate(tickers):
