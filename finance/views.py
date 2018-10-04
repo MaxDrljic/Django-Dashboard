@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http.response import HttpResponse
 
 # Create your views here.
 # rest_framework imports are referring to djangorestframework
@@ -10,6 +11,8 @@ from .models import Company
 
 def company_article_list(request):
     return render(request, "finance/plotly.html", {})
+
+# Chart API to integrate and display charts in /companies url
 
 
 class ChartData(APIView):
@@ -33,3 +36,16 @@ class ChartData(APIView):
         }
 
         return Response(data)
+
+
+# Implementing Dash by Plotly
+# Dash is a great solution for displaying stock dickers,
+# metal and oil chart implementation, etc...
+
+# **kwargs parameter enables to add as many parameters in function call as we want / need
+def dash(request, **kwargs):
+    return HttpResponse(dispatcher(request))
+
+
+def dash_ajax(request):
+    return HttpResponse(dispatcher(request), content_type='application/json')
