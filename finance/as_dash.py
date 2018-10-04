@@ -121,8 +121,8 @@ def _create_app():
                 }
             ))
 
-            return graphs
-        return app
+        return graphs
+    return app
 
 
 def bbands(price, window_size=10, num_of_std=5):
