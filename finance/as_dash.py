@@ -42,7 +42,7 @@ def _create_app():
             'margin-left': '7px',
             'font-weight': 'bolder',
             'font-family': 'Product Sans',
-            'color:' "rgba(117, 117, 117, 0.95)",
+            'color': 'rgba(117, 117, 117, 0.95)',
             'margin-top': '20px',
             'margin-bottom': '0'
           }),
