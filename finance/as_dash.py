@@ -1,31 +1,29 @@
-import pandas as pd
-from pandas_datareader.data import DataReader
-import colorlover as cl
-import datetime as dt
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-# Pandas library is used to read and use external data
-
-df_symbol = pd.read_csv('tickers.csv')
+import pandas as pd
+import colorlover as cl
+import datetime as dt
+from pandas_datareader.data import DataReader
 
 # Colorscale from the colorlover docs
 colorscale = cl.scales['9']['qual']['Paired']
+
+# Pandas library is used to read and use external data
+
+df_symbol = pd.read_csv('tickers.csv')
 
 # Used to get the request in the right format
 
 
 def dispatcher(request):
     app = _create_app()
-
     params = {
         'data': request.body,
         'method': request.method,
         'content_type': request.content_type
     }
-
     with app.server.test_request_context(request.path, **params):
         app.server.preprocess_request()
         try:
@@ -66,83 +64,77 @@ def _create_app():
             value=['AAPL', 'TSLA'],
             multi=True
         ),
-        html.Div(id='graphs')
+        html.Div(id='graphs'),
 
-        @app.callback(
-            dash.dependencies.Output('graphs', 'children'),
-            [dash.dependencies.Input('stock-ticker-input', 'value')]
-        )
+    ], className="container")
 
-    ])
-
+    @app.callback(
+        dash.dependencies.Output('graphs', 'children'),
+        [dash.dependencies.Input('stock-ticker-input', 'value')])
     # End dash application ----------------->
+    def update_graph(tickers):
+        graphs = []
+        for i, ticker in enumerate(tickers):
+            try:
+                # df is dataframe
+                df = DataReader(ticker, 'quandl',
+                                df.datetime(2018, 1, 1),
+                                dt.datetime.now())
+            except:
+                graphs.append(html.H3(
+                    'Data is not available for {}'.format(ticker),
+                    style={'marginTop': 20, 'marginBottom': 20}
+                ))
+                continue
 
-
-def update_graph(tickers):
-    graphs = []
-    for i, ticker in enumerate(tickers):
-        try:
-            # df is dataframe
-            df = DataReader(ticker, 'quandl',
-                            df.datetime(2018, 1, 1),
-                            dt.datetime.now())
-        except:
-            graphs.append(html.H3(
-                'Data is not available for {}'.format(ticker),
-                style={'marginTop': 20, 'marginBottom': 20}
-            ))
-            continue
-
-        candlestick = {
-            'x': df.index,
-            'open': df['Open'],
-            'high': df['High'],
-            'low': df['Low'],
-            'close': df['Close'],
-            'type': 'candlestick',
-            'name': ticker,
-            'legendgroup': ticker,
-            'increasing': {'line': {'color': colorscale[0]}},
-            'decreasing': {'line': {'color': colorscale[1]}}
-        }
-
-        bb_bands = bbands(df.Close)
-        bollinger_traces = [{
-          'x': df.index,
-          'y': y,
-          'type': 'scatter',
-          'mode': 'lines',
-          'line': {'width': 1, 'color': colorscale[(i*2) % len(colorscale)]},
-          'hoverinfo': 'none',
-          'legendgroup': ticker,
-          'showlegend': True if i == 0 else False,
-          'name': '{} - bollinger bands'.format(ticker)
-        } for i, y in enumerate(bb_bands)]
-
-        graphs.append(dcc.Graph(
-          id=ticker,
-          figure={
-            'data': [candlestick] + bollinger_traces,
-            'layout': {
-              'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
-              'legend': {'x': 0}
+            candlestick = {
+                'x': df.index,
+                'open': df['Open'],
+                'high': df['High'],
+                'low': df['Low'],
+                'close': df['Close'],
+                'type': 'candlestick',
+                'name': ticker,
+                'legendgroup': ticker,
+                'increasing': {'line': {'color': colorscale[0]}},
+                'decreasing': {'line': {'color': colorscale[1]}}
             }
-          }
-        ))
 
-        return graphs
-    return app        
+            bb_bands = bbands(df.Close)
+            bollinger_traces = [{
+                'x': df.index, 'y': y,
+                'type': 'scatter', 'mode': 'lines',
+                'line': {'width': 1, 'color': colorscale[(i*2) % len(colorscale)]},
+                'hoverinfo': 'none',
+                'legendgroup': ticker,
+                'showlegend': True if i == 0 else False,
+                'name': '{} - bollinger bands'.format(ticker)
+            } for i, y in enumerate(bb_bands)]
+            graphs.append(dcc.Graph(
+                id=ticker,
+                figure={
+                    'data': [candlestick] + bollinger_traces,
+                    'layout': {
+                        'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
+                        'legend': {'x': 0}
+                    }
+                }
+            ))
+
+            return graphs
+        return app
+
 
 def bbands(price, window_size=10, num_of_std=5):
-  rolling_mean = price.rolling(window=window_size).mean()
-  rolling_std = price.rolling(window=window_size).std()
-  upper_band = rolling_mean + (rolling_std * num_of_std)        
-  lower_band = rolling_mean - (rolling_std * num_of_std)
-  return rolling_mean, upper_band, lower_band      
+    rolling_mean = price.rolling(window=window_size).mean()
+    rolling_std = price.rolling(window=window_size).std()
+    upper_band = rolling_mean + (rolling_std * num_of_std)
+    lower_band = rolling_mean - (rolling_std * num_of_std)
+    return rolling_mean, upper_band, lower_band
 
 
 # If this script is called, run the server
 # Condition specified for Windows OS
-if __name__ == "__main__":
-  app = _create_app()
-  app.run_server()
+if __name__ == '__main__':
+    app = _create_app()
+    app.run_server()

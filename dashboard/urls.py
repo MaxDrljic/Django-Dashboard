@@ -30,8 +30,8 @@ urlpatterns = [
     path('home/', news_list, name='home'),
     path('companies/', company_article_list, name='companies'),
     path('api/chart/data', ChartData.as_view(), name='api-chart-data'),
-    path('dash/', dash),
-    path('_dash/', dash_ajax)
+    path('dash/', dash, name='dash'),
+    path('_dash/', dash_ajax, name='_dash')
 ]
 
 if settings.DEBUG:

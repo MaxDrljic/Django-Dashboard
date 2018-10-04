@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Company
 from .as_dash import dispatcher
+from .models import Company
 
 
 def company_article_list(request):
@@ -35,7 +35,7 @@ class ChartData(APIView):
         # Also, it is a Plotly function called after a successful AJAX request
         data = {
             "article_labels": articles.keys(),
-            "article_data": articles.values()
+            "article_data": articles.values(),
         }
 
         return Response(data)
